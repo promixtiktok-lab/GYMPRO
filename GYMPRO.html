@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche Officielle - Projet Individuel de Gymnastique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* VARIABLES DE CONFIGURATION DYNAMIQUE */
+        :root {
+            --primary-color: #1a365d;   
+            --accent-color: #2b6cb0;    
+            --light-bg: #edf2f7;
+            --danger-color: #e53e3e;
+            --selected-font: 'Arial', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: var(--selected-font);
+            transition: font-family 0.2s ease;
+        }
+        
+        body {
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 10px;
+            color: #2d3748;
+        }
+
+        /* CONFIGURATION STRICTE A4 */
+        .page-sheet {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 8mm 10mm;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 3px double var(--primary-color);
+            transition: border-color 0.3s ease;
+        }
+
+        /* En-tête officiel */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 4px;
+        }
+
+        .header-left {
+            width: 55%;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            font-weight: bold;
+            line-height: 1.2;
+            color: var(--primary-color);
+        }
+
+        .header-right {
+            width: 40%;
+            text-align: right;
+            font-size: 8.5pt;
+            line-height: 1.2;
+        }
+
+        .republique { font-weight: bold; letter-spacing: 0.5px; }
+        .devise { font-style: italic; font-size: 7.5pt; color: #4a5568; }
+
+        .main-title { text-align: center; margin: 6px 0; }
+        .main-title h1 {
+            font-size: 13pt;
+            margin: 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 2px solid var(--primary-color);
+            padding: 3px;
+            background-color: #f7fafc;
+        }
+
+        /* Bloc Informations Candidat */
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-bottom: 6px;
+            font-size: 8.5pt;
+        }
+
+        .info-box {
+            display: flex;
+            align-items: center;
+            background: #edf2f7;
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+        }
+        .info-box.span-2 { grid-column: span 2; }
+        .info-box.span-3 { grid-column: span 3; }
+
+        .info-box label {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+
+        .info-box input, .info-box select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed #4a5568;
+            font-size: 8.5pt;
+            color: #1a202c;
+            padding: 1px;
+        }
+        .info-box input:focus { outline: none; border-bottom-color: var(--accent-color); }
+
+        /* Répertoire de la grille */
+        .table-section {
+            flex-grow: 1;
+            margin-bottom: 6px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .table-title {
+            font-size: 9pt;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: var(--accent-color);
+            padding: 4px 6px;
+            margin: 0 0 2px 0;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+
+        .flex-table {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            border: 1px solid #a0aec0;
+            background: #fff;
+            position: relative; 
+        }
+
+        .table-watermark {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            opacity: 0.09; 
+            pointer-events: none; 
+            z-index: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .table-watermark img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .table-header {
+            display: flex;
+            background-color: #edf2f7;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 7.5pt;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            z-index: 1;
+        }
+
+        .table-body {
+            display: grid;
+            grid-template-rows: repeat(var(--total-rows, 8), 1fr);
+            flex-grow: 1;
+            z-index: 1;
+        }
+
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #a0aec0;
+            background: transparent !important; 
+        }
+        .table-row:last-child { border-bottom: none; }
+
+        .table-cell {
+            display: flex;
+            align-items: stretch;
+            border-right: 1px solid #a0aec0;
+        }
+        .table-cell:last-child { border-right: none; }
+
+        .col-num { width: 5%; justify-content: center; align-items: center; font-weight: bold; background: rgba(247,250,252,0.6); }
+        .col-tech { width: 47%; align-items: center; padding: 0 6px; }
+        .col-cat { width: 12%; justify-content: center; align-items: center; }
+        .col-ind { width: 18%; }
+        .col-pts { width: 18%; }
+
+        .col-tech input { width: 100%; border: none; background: transparent; font-size: 10pt; }
+        .col-tech input:focus { outline: none; }
+
+        .cat-select {
+            width: 100%;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #cbd5e0;
+            border-radius: 3px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .sub-cell-container { display: flex; flex-direction: column; width: 100%; height: 100%; justify-content: stretch; align-items: stretch; }
+        .sub-cell-row {
+            font-size: 6pt !important;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            flex: 1;
+        }
+        .sub-cell-row:last-child { border-bottom: none; }
+
+        .placeholder-dash { width: 100%; display: flex; justify-content: center; align-items: center; color: #a0aec0; font-style: italic; }
+
+        /* Cadre Jury */
+        .jury-section { margin-bottom: 6px; }
+        .jury-title {
+            font-size: 8.5pt;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #4a5568;
+            padding: 3px 6px;
+            margin: 0 0 3px 0;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+
+        .jury-table { width: 100%; border-collapse: collapse; }
+        .jury-table th, .jury-table td { border: 1px solid #a0aec0; padding: 3px; }
+        .jury-table th { background-color: #e2e8f0; font-size: 7pt; text-align: center; }
+        .jury-table td { text-align: center; height: 18px; font-weight: bold; font-size: 8pt; }
+        .neg-display { color: #dd6b20; background-color: #fffaf0; }
+
+        /* Signatures et Note */
+        .footer-signatures { display: flex; justify-content: space-between; align-items: stretch; gap: 8px; }
+        .signatures-list { width: 76%; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .sig-line { border: 1px solid #cbd5e0; padding: 3px; border-radius: 4px; background: #f7fafc; min-height: 32px; }
+        .sig-line p { margin: 0; font-weight: bold; color: #4a5568; font-size: 7.5pt; }
+
+        .note-box {
+            width: 22%;
+            border: 1.5px dashed var(--danger-color);
+            background-color: #fff5f5;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2px 4px;
+            height: 44px;
+        }
+        .note-box h2 { margin: 0; font-size: 8pt; color: var(--danger-color); text-transform: uppercase; letter-spacing: 0.2px; }
+        .note-display { font-size: 13pt; font-weight: bold; color: #cbd5e0; }
+
+        /* PANNEAU DE CONTROLE */
+        .control-panel {
+            max-width: 210mm;
+            margin: 0 auto 8px auto;
+            background: #ffffff;
+            padding: 12px 14px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .panel-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .panel-row:last-child { margin-bottom: 0; border-top: 1px dashed #e2e8f0; padding-top: 8px; }
+        .panel-group { display: flex; align-items: center; gap: 8px; font-size: 9pt; }
+        .panel-group label { font-weight: bold; color: #4a5568; }
+
+        /* JAUGE DE PROGRESSION */
+        .ambition-container {
+            width: 45%;
+            background-color: #e2e8f0;
+            border-radius: 20px;
+            height: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #cbd5e0;
+        }
+        .ambition-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.4s ease;
+        }
+        .ambition-text {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 7.5pt; font-weight: bold; color: #1a202c;
+        }
+
+        .btn-action {
+            background-color: #4a5568; color: white; border: none; padding: 6px 12px;
+            font-size: 8.5pt; font-weight: bold; border-radius: 4px; cursor: pointer;
+        }
+        .btn-action.primary { background-color: var(--accent-color); }
+        .btn-action.danger { background-color: var(--danger-color); }
+        .btn-action.success { background-color: #2f855a; }
+        .btn-action:hover { opacity: 0.9; }
+
+        .select-custom { padding: 4px; font-size: 8.5pt; border-radius: 4px; border: 1px solid #cbd5e0; background: white; }
+
+        @media print {
+            body { background-color: #ffffff; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .control-panel { display: none !important; }
+            .page-sheet { box-shadow: none !important; margin: 0 !important; width: 210mm !important; height: 297mm !important; padding: 8mm 10mm !important; page-break-inside: avoid; }
+            select { -webkit-appearance: none; -moz-appearance: none; appearance: none; background: transparent !important; border: none !important; text-align: center; text-align-last: center; padding: 0 !important; width: 100%; }
+            input { border: none !important; outline: none !important; background: transparent !important; padding: 0 !important; }
+            input::placeholder { color: transparent !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel">
+        <div class="panel-row">
+            <div>
+                <h4 style="margin: 0; color: var(--accent-color);">Fiche de Gymnastique Dynamique</h4>
+                <p style="margin: 0; font-size: 8pt; color: #718096;">Tarif de validation : <b style="color: var(--danger-color);">300 FCFA</b></p>
+            </div>
+            
+            <div class="panel-group" style="flex-grow: 1; justify-content: center;">
+                <span style="font-weight: bold; font-size: 8.5pt;">🎯 Remplissage :</span>
+                <div class="ambition-container">
+                    <div class="ambition-bar" id="ambition-bar-fill"></div>
+                    <div class="ambition-text" id="ambition-text-label">0% - En attente... 🧭</div>
+                </div>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-action" onclick="addNewRow()">➕ Ajouter</button>
+                <button class="btn-action danger" onclick="removeLastRow()">❌ Supprimer</button>
+            </div>
+        </div>
+
+        <div class="panel-row">
+            <div class="panel-group">
+                <label>Couleur :</label>
+                <select id="theme-selector" class="select-custom" onchange="changeTheme(this.value)">
+                    <option value="officiel">🔵 Bleu Officiel</option>
+                    <option value="rouge">🔴 Rouge Sport</option>
+                    <option value="vert">🟢 Vert Athlétique</option>
+                    <option value="violet">🟣 Violet Élégant</option>
+                </select>
+            </div>
+
+            <div class="panel-group">
+                <label>Style :</label>
+                <select id="font-selector" class="select-custom" onchange="changeFont(this.value)">
+                    <option value="Arial">Standard (Arial)</option>
+                    <option value="Montserrat">Moderne (Montserrat)</option>
+                    <option value="Futura">Athlétique (Futura)</option>
+                    <option value="Times New Roman">Classique (Times)</option>
+                </select>
+            </div>
+
+            <div class="panel-group">
+                <label>Filigrane :</label>
+                <select id="watermark-selector" class="select-custom" onchange="updateWatermarkImage(this.value)"></select>
+                <input type="file" id="upload-image-input" accept="image/*" style="display: none;" onchange="loadCustomImage(this)">
+                <button class="btn-action success" onclick="document.getElementById('upload-image-input').click()">📁 Image</button>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-action" id="btn-pay" onclick="lancerPaiementSingPay()" style="background-color: #dd6b20;">🔑 Débloquer l'Impression</button>
+                <button class="btn-action primary" id="btn-print" onclick="window.print()" style="display: none;">🖨️ Imprimer la Fiche</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-sheet">
+        
+        <div class="table-watermark" id="watermark-bg" style="display: none;">
+            <img id="watermark-img" src="" alt="Filigrane">
+        </div>
+
+        <div class="header">
+            <div class="header-left">
+                Ministère de l'Éducation Nationale<br>
+                et de l'Enseignement Technique<br>
+                <span style="font-size: 7.5pt; font-weight: normal; color: #4a5568;">Cellule de Gestion du Baccalauréat Technologique</span>
+            </div>
+            <div class="header-right">
+                <span class="republique">RÉPUBLIQUE GABONAISE</span><br>
+                <span class="devise">Union - Travail - Justice</span>
+            </div>
+        </div>
+
+        <div class="main-title">
+            <h1>Projet Individuel De Gymnastique</h1>
+        </div>
+
+        <div class="info-section">
+            <div class="info-box span-2"><label>Examen :</label><input type="text" value="BACCALAUREAT"></div>
+            <div class="info-box"><label>Série :</label><input type="text" placeholder="Série"></div>
+            <div class="info-box">
+                <label>Sexe :</label>
+                <select id="student-gender" onchange="handleGenderChange(this.value)">
+                    <option value="Féminin">Féminin</option>
+                    <option value="Masculin">Masculin</option>
+                </select>
+            </div>
+            <div class="info-box span-2"><label>Nom :</label><input type="text" placeholder="Nom complet"></div>
+            <div class="info-box span-2"><label>Établissement :</label><input type="text" placeholder="Lycée d'origine"></div>
+            <div class="info-box span-3"><label>Centre :</label><input type="text" placeholder="Lycée d'accueil"></div>
+            <div class="info-box"><label>Session :</label><input type="text" value="2026"></div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-title">I. Répertoire des Éléments Gymniques Associés à la Cotation</div>
+            <div class="flex-table">
+                <div class="table-header">
+                    <div class="table-cell col-num" style="background:#edf2f7; padding: 5px 0;">N°</div>
+                    <div class="table-cell col-tech" style="padding: 5px 0; justify-content:center;">Éléments Techniques (et Éléments de liaison)</div>
+                    <div class="table-cell col-cat" style="padding: 5px 0;">Catégorie<br>(A-E)</div>
+                    <div class="table-cell col-ind" style="padding: 5px 0; justify-content:center;">Indicateur</div>
+                    <div class="table-cell col-pts" style="padding: 5px 0; justify-content:center;">Points</div>
+                </div>
+                <div class="table-body" id="elements-container"></div>
+            </div>
+        </div>
+
+        <div class="jury-section">
+            <div class="jury-title">II. Cadre Réservé aux Membres du Jury (Calcul Automatique)</div>
+            <table class="jury-table">
+                <thead>
+                    <tr>
+                        <th>Type A<br>(1 pt)</th><th>Type B<br>(1,5 pts)</th><th>Type C<br>(2 pts)</th><th>Type D<br>(2,5 pts)</th><th>Type E<br>(3 pts)</th><th>Note ROV</th><th>Note Projet</th><th>Réalisations (16 pts)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="neg-display" id="neg-A">00</td><td class="neg-display" id="neg-B">00</td><td class="neg-display" id="neg-C">00</td><td class="neg-display" id="neg-D">00</td><td class="neg-display" id="neg-E">00</td>
+                        <td rowspan="2" style="color:#cbd5e0; font-size:7pt; font-weight:normal; vertical-align:middle;">Jury</td>
+                        <td rowspan="2" style="color:#cbd5e0; font-size:7pt; font-weight:normal; vertical-align:middle;">Jury</td>
+                        <td rowspan="2" style="color:#cbd5e0; font-size:7pt; font-weight:normal; vertical-align:middle;">Note Jury</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:6.5pt; color:#a0aec0;">Notes</td><td style="font-size:6.5pt; color:#a0aec0;">Notes</td><td style="font-size:6.5pt; color:#a0aec0;">Notes</td><td style="font-size:6.5pt; color:#a0aec0;">Notes</td><td style="font-size:6.5pt; color:#a0aec0;">Notes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer-signatures">
+            <div class="signatures-list">
+                <div class="sig-line"><p>Correcteur Projet :</p></div><div class="sig-line"><p>Correcteur Principal :</p></div>
+                <div class="sig-line"><p>Correcteur ROV :</p></div><div class="sig-line"><p>Rapporteur :</p></div>
+            </div>
+            <div class="note-box">
+                <h2>Note Finale / 20</h2>
+                <div class="note-display">___ / 20</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 🔴 COPIE ICI TES IDENTIFIANTS SÉCURISÉS SINGPAY 
+        // =========================================================================
+        const SINGPAY_TOKEN        = "METS_TON_BEARER_TOKEN_ICI"; // Ta clé d'API (Authorization Token)
+        const SINGPAY_PORTEFEUILLE = "6a4b9caed6904be54254e534";     // Ton identifiant portefeuille (portefeuille)
+        // =========================================================================
+
+        const BAREMES = {
+            'A': { indicateurs: ['M', 'PM', 'NM', 'NR'], points: ['1', '0.75 / 0.5', '0.25', '0'] },
+            'B': { indicateurs: ['M', 'PM', 'NM', 'NR'], points: ['1.5', '1 / 0.75', '0.5', '0'] },
+            'C': { indicateurs: ['M', 'PM', 'NM', 'NR'], points: ['2', '1.25 / 1', '0.75', '0'] },
+            'D': { indicateurs: ['M', 'PM', 'NM', 'NR'], points: ['2.5 / 2.25', '2 / 1.5', '1.25 / 1', '0'] },
+            'E': { indicateurs: ['M', 'PM', 'NM', 'NR'], points: ['3 / 2.5', '2.25 / 2', '1.5 / 1.25', '0'] }
+        };
+
+        const WATERMARKS_DATABASE = {
+            'Féminin': [
+                { name: "Gym Fille Photo 1", url: "images/filles/gym1.jpg" },
+                { name: "Gym Fille Photo 2", url: "images/filles/gym2.jpg" }
+            ],
+            'Masculin': [
+                { name: "Gym Garçon Photo 1", url: "images/garcons/gym1.jpg" },
+                { name: "Gym Garçon Photo 2", url: "images/garcons/gym2.jpg" }
+            ]
+        };
+
+        const container = document.getElementById('elements-container');
+        let totalRowsCount = 8; 
+
+        function initInitialRows() {
+            for (let i = 1; i <= totalRowsCount; i++) { createRowElement(i); }
+            handleGenderChange('Féminin');
+            processAutomation();
+            checkPaymentStatus(); 
+        }
+
+        function createRowElement(index) {
+            const row = document.createElement('div');
+            row.className = 'table-row';
+            row.id = `gym-row-${index}`;
+            row.innerHTML = `
+                <div class="table-cell col-num row-number-cell">${index}</div>
+                <div class="table-cell col-tech"><input type="text" placeholder="Saisir l'élément..." oninput="processAutomation()"></div>
+                <div class="table-cell col-cat">
+                    <select class="cat-select" onchange="processAutomation()">
+                        <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                    </select>
+                </div>
+                <div class="table-cell col-ind"><div class="placeholder-dash">-</div></div>
+                <div class="table-cell col-pts"><div class="placeholder-dash">-</div></div>
+            `;
+            container.appendChild(row);
+        }
+
+        function addNewRow() { totalRowsCount++; createRowElement(totalRowsCount); processAutomation(); }
+        
+        function removeLastRow() {
+            if (totalRowsCount > 1) {
+                const row = document.getElementById(`gym-row-${totalRowsCount}`);
+                if (row) row.remove();
+                totalRowsCount--;
+                processAutomation();
+            }
+        }
+
+        function changeFont(fontName) {
+            const root = document.documentElement;
+            if (fontName === 'Montserrat') root.style.setProperty('--selected-font', "'Montserrat', sans-serif");
+            else if (fontName === 'Arial') root.style.setProperty('--selected-font', "Arial, sans-serif");
+            else if (fontName === 'Futura') root.style.setProperty('--selected-font', "'Montserrat', 'Arial Black', sans-serif");
+            else if (fontName === 'Times New Roman') root.style.setProperty('--selected-font', "'Times New Roman', serif");
+        }
+
+        function loadCustomImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    updateWatermarkImage(e.target.result);
+                    const selector = document.getElementById('watermark-selector');
+                    const opt = document.createElement('option');
+                    opt.value = e.target.result; opt.innerText = "⭐ " + file.name.substring(0, 10) + "..."; opt.selected = true;
+                    selector.appendChild(opt);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleGenderChange(gender) {
+            const selector = document.getElementById('watermark-selector');
+            selector.innerHTML = '<option value="none">❌ Sans filigrane</option>';
+            const availableImages = WATERMARKS_DATABASE[gender] || [];
+            availableImages.forEach((imgData) => {
+                const opt = document.createElement('option'); opt.value = imgData.url; opt.innerText = imgData.name;
+                selector.appendChild(opt);
+            });
+            updateWatermarkImage('none');
+        }
+
+        function updateWatermarkImage(url) {
+            const bgContainer = document.getElementById('watermark-bg');
+            const imgElement = document.getElementById('watermark-img');
+            if (url === 'none' || url === '') { bgContainer.style.display = 'none'; imgElement.src = ''; }
+            else { imgElement.src = url; bgContainer.style.display = 'flex'; }
+        }
+
+        function changeTheme(themeName) {
+            const root = document.documentElement;
+            if (themeName === 'officiel') { root.style.setProperty('--primary-color', '#1a365d'); root.style.setProperty('--accent-color', '#2b6cb0'); }
+            else if (themeName === 'rouge') { root.style.setProperty('--primary-color', '#741212'); root.style.setProperty('--accent-color', '#e53e3e'); }
+            else if (themeName === 'vert') { root.style.setProperty('--primary-color', '#1c4528'); root.style.setProperty('--accent-color', '#2f855a'); }
+            else if (themeName === 'violet') { root.style.setProperty('--primary-color', '#441d4f'); root.style.setProperty('--accent-color', '#805ad5'); }
+        }
+
+        function processAutomation() {
+            let counters = { 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0 };
+            const rows = container.querySelectorAll('.table-row');
+            const totalRows = rows.length;
+            container.style.setProperty('--total-rows', totalRows);
+            let filledFieldsCount = 0; 
+
+            rows.forEach((row, index) => {
+                row.querySelector('.row-number-cell').innerText = index + 1;
+                const select = row.querySelector('.cat-select');
+                const choice = select.value;
+                const indCell = row.querySelector('.col-ind');
+                const ptsCell = row.querySelector('.col-pts');
+                const textInput = row.querySelector('input[type="text"]');
+
+                if (textInput && textInput.value.trim() !== "" && choice !== "") { filledFieldsCount++; }
+
+                if (choice && BAREMES[choice]) {
+                    counters[choice]++;
+                    let htmlInd = '<div class="sub-cell-container">';
+                    let htmlPts = '<div class="sub-cell-container">';
+                    BAREMES[choice].indicateurs.forEach((indStr, subIndex) => {
+                        const ptsStr = BAREMES[choice].points[subIndex];
+                        htmlInd += `<div class="sub-cell-row"><b>${indStr}</b></div>`;
+                        htmlPts += `<div class="sub-cell-row">${ptsStr}</div>`;
+                    });
+                    indCell.innerHTML = htmlInd + '</div>'; ptsCell.innerHTML = htmlPts + '</div>';
+                } else {
+                    indCell.innerHTML = `<div class="placeholder-dash">-</div>`;
+                    ptsCell.innerHTML = `<div class="placeholder-dash">-</div>`;
+                }
+            });
+
+            for (let type in counters) {
+                document.getElementById(`neg-${type}`).innerText = String(counters[type]).padStart(2, '0');
+            }
+
+            const percentageFilled = Math.min(Math.round((filledFieldsCount / totalRows) * 100), 100);
+            const barFill = document.getElementById('ambition-bar-fill');
+            const textLabel = document.getElementById('ambition-text-label');
+            barFill.style.width = percentageFilled + '%';
+            
+            if (percentageFilled === 0) textLabel.innerText = "0% - Prêt pour l'échauffement ? 🧭";
+            else if (percentageFilled < 40) textLabel.innerText = `${percentageFilled}% - Premier élan validé ! 🏃‍♂️`;
+            else if (percentageFilled < 75) textLabel.innerText = `${percentageFilled}% - Enchaînement solide ! 💪`;
+            else if (percentageFilled < 100) textLabel.innerText = `${percentageFilled}% - L'excellence est proche ! 🚀`;
+            else { textLabel.innerText = "100% - Programme Parfait ! Champion 🏆"; barFill.style.background = "linear-gradient(90deg, #d69e2e, #ecc94b)"; }
+        }
+
+        // =========================================================================
+        // 🚀 PASSERELLE DE PAIEMENT CORRIGÉE SUIVANT LES DIRECTIVES SINGPAY
+        // =========================================================================
+        function lancerPaiementSingPay() {
+            const boutonPayer = document.getElementById('btn-pay');
+            boutonPayer.innerText = "🔄 Redirection...";
+            boutonPayer.disabled = true;
+
+            // Détection propre de l'URL pour la redirection de retour
+            let urlActuelle = window.location.href.split('?')[0];
+            
+            // Alerte de sécurité absolue si l'utilisateur teste en protocole file://
+            if (window.location.protocol === 'file:') {
+                alert("⚠️ Erreur locale : SingPay ne peut pas exécuter de redirection vers un fichier local (file:///).\n\nPour tester le bouton, tu dois mettre ta page en ligne (GitHub Pages, hébergeur...) ou utiliser un environnement local avec serveur (ex: Live Server dans VS Code).");
+                boutonPayer.innerText = "🔑 Débloquer l'Impression";
+                boutonPayer.disabled = false;
+                return;
+            }
+
+            const urlRetourSucces = urlActuelle + "?status=success";
+            const urlRetourErreur = urlActuelle + "?status=error";
+            const referenceUnique = "GYM-" + Date.now(); // Génération d'une référence dynamique unique
+
+            // Création de la charge utile (Payload JSON) EXACTEMENT demandée par ton assistant SingPay
+            const donneesPaiement = {
+                "amount": 300,
+                "reference": referenceUnique,
+                "client_msisdn": "", 
+                "portefeuille": SINGPAY_PORTEFEUILLE,
+                "disbursement": "",
+                "redirect_success": urlRetourSucces,
+                "redirect_error": urlRetourErreur,
+                "isTransfer": false
+            };
+
+            // Envoi à l'API de SingPay
+          fetch('https://gateway.singpay.ga/v1/transfer', {
+  method: 'POST',
+  headers: {
+    'x-client-id': '1e0e1bd3-73a6-4bf5-b0c8-643acff46afb',
+    'x-client-secret': '870349d14d4109aff8751f2359b38714dc8789c34241b6ef956f39f4c7ef9aca',
+    'x-wallet': '6a4b9caed6904be54254e534',  // Insérez ici votre ID de portefeuille
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    // Vos données de transfert
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Erreur:', error));
+            .catch(error => {
+                console.error("Détails de l'erreur SingPay :", error);
+                alert("⚠️ Échec de la communication avec SingPay.\n\nVérifie :\n1. Que ton ID Portefeuille et ton Token sont valides.\n2. Que le site est hébergé en ligne (HTTPS).");
+                boutonPayer.innerText = "🔑 Débloquer l'Impression";
+                boutonPayer.disabled = false;
+            });
+        }
+
+        // --- GESTION DES PARAMÈTRES DE RETOUR DE REDIRECTION ---
+        function checkPaymentStatus() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'success') {
+                document.getElementById('btn-pay').style.display = 'none';
+                document.getElementById('btn-print').style.display = 'inline-block';
+                alert("✅ Paiement de 300 FCFA validé avec succès par SingPay ! L'accès à l'impression A4 est déverrouillé.");
+            } else if (urlParams.get('status') === 'error') {
+                alert("❌ Le paiement SingPay a échoué ou a été annulé par l'utilisateur. Veuillez réessayer.");
+            }
+        }
+
+        window.onload = initInitialRows;
+    </script>
+</body>
+</html>
